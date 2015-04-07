@@ -11,6 +11,7 @@ public class PlayerBehaviour : MonoBehaviour
     public GameObject WallBlock;
 
     /* References */
+    private WinBlockBehaviour _winBlock;
 
     /* Properties */
     private List<int> _movementQueue; // 1 = Up, 2 = Down, 3 = Left, 4 = Right
@@ -19,12 +20,12 @@ public class PlayerBehaviour : MonoBehaviour
     /* Constants */
     private const float SlideSpeed = 0.3f;
 
-
 	// Use this for initialization
 	void Start ()
 	{
         _movementQueue = new List<int>(10);
 	    _isMoving = false;
+	    _winBlock = GameObject.Find("WinBlock").GetComponent<WinBlockBehaviour>();
 	}
 	
 	// Update is called once per frame
@@ -45,6 +46,8 @@ public class PlayerBehaviour : MonoBehaviour
         {
             _movementQueue.Add(4);
         }
+	    if (Input.GetKeyUp(KeyCode.R))
+	        StartCoroutine(_winBlock.RestartLevel());
 
 	    if (_movementQueue.Count != 0 && !_isMoving)
 	    {
@@ -100,6 +103,7 @@ public class PlayerBehaviour : MonoBehaviour
 
         CreateBlockAt(startPosition);
         _isMoving = false;
+        _winBlock.CheckWinCondition(transform.position);
         yield return null;
     }
 
