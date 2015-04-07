@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using UnityEngine;
 using System.Collections;
@@ -12,6 +13,7 @@ public class PlayerBehaviour : MonoBehaviour
 
     /* References */
     private WinBlockBehaviour _winBlock;
+    private Transform _wallsAnchor;
 
     /* Properties */
     private List<int> _movementQueue; // 1 = Up, 2 = Down, 3 = Left, 4 = Right
@@ -26,6 +28,7 @@ public class PlayerBehaviour : MonoBehaviour
         _movementQueue = new List<int>(10);
 	    _isMoving = false;
 	    _winBlock = GameObject.Find("WinBlock").GetComponent<WinBlockBehaviour>();
+	    _wallsAnchor = GameObject.Find("Walls").transform;
 	}
 	
 	// Update is called once per frame
@@ -46,8 +49,6 @@ public class PlayerBehaviour : MonoBehaviour
         {
             _movementQueue.Add(4);
         }
-	    if (Input.GetKeyUp(KeyCode.R))
-	        StartCoroutine(_winBlock.RestartLevel());
 
 	    if (_movementQueue.Count != 0 && !_isMoving)
 	    {
@@ -88,6 +89,7 @@ public class PlayerBehaviour : MonoBehaviour
     void CreateBlockAt(Vector3 position)
     {
         var block = Instantiate(WallBlock, position, Quaternion.identity) as GameObject;
+        block.transform.SetParent(_wallsAnchor);
         StartCoroutine(Grow(block, 0.0f, 0.3f, 0.5f));
     }
 
@@ -101,6 +103,7 @@ public class PlayerBehaviour : MonoBehaviour
             yield return null;
         }
 
+        transform.position = finalPosition;
         CreateBlockAt(startPosition);
         _isMoving = false;
         _winBlock.CheckWinCondition(transform.position);
@@ -117,7 +120,8 @@ public class PlayerBehaviour : MonoBehaviour
             sceneObject.transform.localScale = Vector3.Lerp(new Vector3(startScale, startScale, startScale), new Vector3(endScale, endScale, endScale), SmoothTimeValue(deltaTime / time));
             yield return null;
         }
-
+        
+        sceneObject.transform.localScale = new Vector3(endScale, endScale, endScale);
         yield return null;
     }
 }

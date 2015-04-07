@@ -12,7 +12,6 @@ public class WinBlockBehaviour : MonoBehaviour
 	{
 	    _fadeScreen = GameObject.Find("FadeScreen");
 	    StartCoroutine(FadeScreenOut(1f));
-	    SetEnabled(false);
 	}
 
     public void CheckWinCondition(Vector3 playerPosition)
@@ -20,14 +19,25 @@ public class WinBlockBehaviour : MonoBehaviour
         if (!_enabled)
             return;
 
-        if (playerPosition.x == transform.position.x && playerPosition.z == transform.position.z)
+        if (playerPosition.x - transform.position.x < 0.2f && playerPosition.z - transform.position.z < 0.2f)
         {
             Debug.Log("Won Level!");
-            StartCoroutine(FadeScreenIn(5f));
+            StartCoroutine(FadeToWin());
         }
     }
 
-    public IEnumerator RestartLevel()
+    public void RestartLevel()
+    {
+        StartCoroutine(FadeToRestart());
+    }
+
+    public void SetEnabled(bool isEnabled)
+    {
+        _enabled = isEnabled;
+        transform.GetChild(0).gameObject.SetActive(isEnabled);
+    }
+
+    public IEnumerator FadeToRestart()
     {
         StartCoroutine(FadeScreenIn(0.5f));
         while (!_doneFading)
@@ -39,10 +49,19 @@ public class WinBlockBehaviour : MonoBehaviour
         Application.LoadLevel(Application.loadedLevelName);
     }
 
-    public void SetEnabled(bool isEnabled)
+    IEnumerator FadeToWin()
     {
-        _enabled = isEnabled;
-        transform.GetChild(0).gameObject.SetActive(isEnabled);
+        StartCoroutine(FadeScreenIn(4f));
+        while (!_doneFading)
+        {
+            yield return null;
+        }
+
+        // Restart level here
+        var currentLevelName = Application.loadedLevelName;
+        var levelNumber = int.Parse(currentLevelName.Substring(currentLevelName.Length-1, 1));
+
+        Application.LoadLevel("Level" + (levelNumber+1));
     }
 
     IEnumerator FadeScreenIn(float time)

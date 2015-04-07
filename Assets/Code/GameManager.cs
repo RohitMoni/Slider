@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         if (Input.GetKeyUp(KeyCode.R))
-            StartCoroutine(_winBlock.RestartLevel());
+            _winBlock.RestartLevel();
         else if (Input.GetKeyUp(KeyCode.Escape))
             Application.Quit();
 	}
