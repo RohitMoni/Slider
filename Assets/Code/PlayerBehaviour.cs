@@ -20,7 +20,7 @@ public class PlayerBehaviour : MonoBehaviour
     private bool _isMoving;
 
     /* Constants */
-    private const float SlideSpeed = 0.3f;
+    private const float SlideSpeed = 0.2f;
 
 	// Use this for initialization
 	void Start ()
@@ -33,19 +33,19 @@ public class PlayerBehaviour : MonoBehaviour
 	
 	// Update is called once per frame
 	void Update () {
-        if (Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.UpArrow))
+        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
         {
             _movementQueue.Add(1);
         }
-        if (Input.GetKeyUp(KeyCode.S) || Input.GetKeyUp(KeyCode.DownArrow))
+        if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
         {
             _movementQueue.Add(2);
         }
-        if (Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.LeftArrow))
+        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
         {
             _movementQueue.Add(3);
         }
-        if (Input.GetKeyUp(KeyCode.D) || Input.GetKeyUp(KeyCode.RightArrow))
+        if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
         {
             _movementQueue.Add(4);
         }

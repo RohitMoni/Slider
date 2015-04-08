@@ -19,7 +19,7 @@ public class WinBlockBehaviour : MonoBehaviour
         if (!_enabled)
             return;
 
-        if (playerPosition.x - transform.position.x < 0.2f && playerPosition.z - transform.position.z < 0.2f)
+        if (Mathf.Abs(playerPosition.x - transform.position.x) < 0.05f && Mathf.Abs(playerPosition.z - transform.position.z) < 0.05f)
         {
             Debug.Log("Won Level!");
             StartCoroutine(FadeToWin());
@@ -51,7 +51,7 @@ public class WinBlockBehaviour : MonoBehaviour
 
     IEnumerator FadeToWin()
     {
-        StartCoroutine(FadeScreenIn(4f));
+        StartCoroutine(FadeScreenIn(2f));
         while (!_doneFading)
         {
             yield return null;
