@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Linq;
+using UnityEngine;
 using System.Collections;
 
 public class WinBlockBehaviour : MonoBehaviour
@@ -6,17 +8,31 @@ public class WinBlockBehaviour : MonoBehaviour
     private bool _enabled;
     private GameObject _fadeScreen;
     private bool _doneFading;
+    private int _counter;
 
 	// Use this for initialization
 	void Start ()
 	{
 	    _fadeScreen = GameObject.Find("FadeScreen");
 	    StartCoroutine(FadeScreenOut(1f));
+	    _counter = GameObject.FindGameObjectsWithTag("Pickup").Count();
+        CheckEnabled();
 	}
+
+    public void PickupTriggered()
+    {
+        _counter--;
+        CheckEnabled();
+    }
+
+    private void CheckEnabled()
+    {
+        SetEnabled(_counter <= 0);
+    }
 
     public void CheckWinCondition(Vector3 playerPosition)
     {
-        if (!_enabled)
+        if (!_enabled || _counter > 0)
             return;
 
         if (Mathf.Abs(playerPosition.x - transform.position.x) < 0.05f && Mathf.Abs(playerPosition.z - transform.position.z) < 0.05f)
@@ -61,7 +77,8 @@ public class WinBlockBehaviour : MonoBehaviour
         var currentLevelName = Application.loadedLevelName;
         var levelNumber = int.Parse(currentLevelName.Substring(currentLevelName.Length-1, 1));
 
-        Application.LoadLevel("Level" + (levelNumber+1));
+        if (Application.levelCount > levelNumber)
+            Application.LoadLevel("Level" + (levelNumber+1));
     }
 
     IEnumerator FadeScreenIn(float time)

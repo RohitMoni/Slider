@@ -8,7 +8,6 @@ public class GameManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         _winBlock = GameObject.Find("WinBlock").GetComponent<WinBlockBehaviour>();
-	    _winBlock.SetEnabled(true);
 	}
 	
 	// Update is called once per frame
