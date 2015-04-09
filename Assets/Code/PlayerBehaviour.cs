@@ -77,6 +77,7 @@ public class PlayerBehaviour : MonoBehaviour
 
 	        if (canMove)
 	        {
+                GetComponent<AudioSource>().Play();
 	            StartCoroutine(Slide(transform.position, transform.position + movement, SlideSpeed));
 	            _isMoving = true;
 	        }

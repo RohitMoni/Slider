@@ -23,6 +23,9 @@ public class MainMenuCameraBehaviour : MonoBehaviour
         _mousePositionX = Input.mousePosition.x;
 
         transform.Rotate(Vector3.up, _mouseMovementX * 0.1f);
+
+        if (Input.GetKeyUp(KeyCode.Escape))
+            Application.Quit();
 	}
 
     public void StartLevel(int number)

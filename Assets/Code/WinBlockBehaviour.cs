@@ -42,6 +42,7 @@ public class WinBlockBehaviour : MonoBehaviour
 
         if (Mathf.Abs(playerPosition.x - transform.position.x) < 0.05f && Mathf.Abs(playerPosition.z - transform.position.z) < 0.05f)
         {
+            GetComponent<AudioSource>().Play();
             StartCoroutine(FadeToWin());
         }
     }
@@ -92,7 +93,7 @@ public class WinBlockBehaviour : MonoBehaviour
         Application.LoadLevel("MainMenu");
     }
 
-    private IEnumerator FadeToWin()
+    IEnumerator FadeToWin()
     {
         StartCoroutine(FadeScreenIn(2f));
         while (!_doneFading)

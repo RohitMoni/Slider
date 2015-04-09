@@ -7,11 +7,13 @@ public class WinScreenBehaviour : MonoBehaviour
 {
     private bool _doneFading;
     private Image _finalScreenText;
+    private AudioSource _winSound;
 
     private void Start()
     {
         _doneFading = true;
         _finalScreenText = GameObject.Find("Image").GetComponent<Image>();
+        _winSound = GameObject.Find("WinSound").GetComponent<AudioSource>();
         StartCoroutine(FadeScreenIn(2f));
     }
 
@@ -21,7 +23,7 @@ public class WinScreenBehaviour : MonoBehaviour
 	    if (!_doneFading)
 	        return;
 
-        if (Input.anyKey)
+        if (Input.anyKey || !_winSound.isPlaying)
             GoToMainMenu();
 	}
 
