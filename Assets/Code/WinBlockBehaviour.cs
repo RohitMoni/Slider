@@ -19,6 +19,11 @@ public class WinBlockBehaviour : MonoBehaviour
         CheckEnabled();
 	}
 
+    public bool GetIsFading()
+    {
+        return !_doneFading;
+    }
+
     public void PickupTriggered()
     {
         _counter--;
@@ -47,14 +52,22 @@ public class WinBlockBehaviour : MonoBehaviour
         StartCoroutine(FadeToRestart());
     }
 
+    public void GoToMainMenu()
+    {
+        StartCoroutine(FadeToMainMenu());
+    }
+
     public void SetEnabled(bool isEnabled)
     {
         _enabled = isEnabled;
         transform.GetChild(0).gameObject.SetActive(isEnabled);
     }
 
-    public IEnumerator FadeToRestart()
+    IEnumerator FadeToRestart()
     {
+        if (!_doneFading)
+            yield break;
+
         StartCoroutine(FadeScreenIn(0.5f));
         while (!_doneFading)
         {
@@ -63,6 +76,21 @@ public class WinBlockBehaviour : MonoBehaviour
 
         // Restart level here
         Application.LoadLevel(Application.loadedLevelName);
+    }
+
+    IEnumerator FadeToMainMenu()
+    {
+        if (!_doneFading)
+            yield break;
+
+        StartCoroutine(FadeScreenIn(0.5f));
+        while (!_doneFading)
+        {
+            yield return null;
+        }
+
+        // Restart level here
+        Application.LoadLevel("MainMenu");
     }
 
     IEnumerator FadeToWin()

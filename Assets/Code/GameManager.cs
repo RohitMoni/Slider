@@ -12,9 +12,12 @@ public class GameManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        if (_winBlock.GetIsFading())
+            return;
+
         if (Input.GetKeyUp(KeyCode.R))
             _winBlock.RestartLevel();
         else if (Input.GetKeyUp(KeyCode.Escape))
-            Application.Quit();
+            _winBlock.GoToMainMenu();
 	}
 }

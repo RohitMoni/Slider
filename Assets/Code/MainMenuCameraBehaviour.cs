@@ -36,6 +36,9 @@ public class MainMenuCameraBehaviour : MonoBehaviour
 
     IEnumerator FadeToGoToLevel(int number)
     {
+        if (!_doneFading)
+            yield break;
+
         StartCoroutine(FadeScreenIn(1f));
         while (!_doneFading)
         {

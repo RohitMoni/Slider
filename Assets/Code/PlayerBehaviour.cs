@@ -32,7 +32,11 @@ public class PlayerBehaviour : MonoBehaviour
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update ()
+	{
+	    if (_winBlock.GetIsFading())
+	        return;
+
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
         {
             _movementQueue.Add(1);
