@@ -103,7 +103,8 @@ public class WinBlockBehaviour : MonoBehaviour
         while (deltaTime < time)
         {
             deltaTime += Time.deltaTime;
-            _fadeScreen.GetComponent<Renderer>().material.color = Color.Lerp(Color.white, new Color(1, 1, 1, 0), (deltaTime / time));
+            if (_fadeScreen)
+                _fadeScreen.GetComponent<Renderer>().material.color = Color.Lerp(Color.white, new Color(1, 1, 1, 0), (deltaTime / time));
             yield return null;
         }
 
