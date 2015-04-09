@@ -93,7 +93,7 @@ public class WinBlockBehaviour : MonoBehaviour
         Application.LoadLevel("MainMenu");
     }
 
-    IEnumerator FadeToWin()
+    private IEnumerator FadeToWin()
     {
         StartCoroutine(FadeScreenIn(2f));
         while (!_doneFading)
@@ -103,10 +103,12 @@ public class WinBlockBehaviour : MonoBehaviour
 
         // Restart level here
         var currentLevelName = Application.loadedLevelName;
-        var levelNumber = int.Parse(currentLevelName.Substring(currentLevelName.Length-1, 1));
+        var levelNumber = int.Parse(currentLevelName.Substring(currentLevelName.Length - 1, 1));
 
-        if (Application.levelCount > levelNumber)
-            Application.LoadLevel("Level" + (levelNumber+1));
+        if (Application.levelCount-2 > levelNumber)
+            Application.LoadLevel("Level" + (levelNumber + 1));
+        else
+            Application.LoadLevel("WinScreen");
     }
 
     IEnumerator FadeScreenIn(float time)
@@ -116,7 +118,8 @@ public class WinBlockBehaviour : MonoBehaviour
         while (deltaTime < time)
         {
             deltaTime += Time.deltaTime;
-            _fadeScreen.GetComponent<Renderer>().material.color = Color.Lerp(new Color(1, 1, 1, 0), Color.white, (deltaTime / time));
+            if (_fadeScreen)
+                _fadeScreen.GetComponent<Renderer>().material.color = Color.Lerp(new Color(1, 1, 1, 0), Color.white, (deltaTime / time));
             yield return null;
         }
 

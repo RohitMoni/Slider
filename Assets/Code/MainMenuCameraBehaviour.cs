@@ -55,7 +55,8 @@ public class MainMenuCameraBehaviour : MonoBehaviour
         while (deltaTime < time)
         {
             deltaTime += Time.deltaTime;
-            _fadeScreen.GetComponent<Renderer>().material.color = Color.Lerp(new Color(1, 1, 1, 0), Color.white, (deltaTime / time));
+            if (_fadeScreen)
+                _fadeScreen.GetComponent<Renderer>().material.color = Color.Lerp(new Color(1, 1, 1, 0), Color.white, (deltaTime / time));
             yield return null;
         }
 
