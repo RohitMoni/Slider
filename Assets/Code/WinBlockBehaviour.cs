@@ -42,7 +42,6 @@ public class WinBlockBehaviour : MonoBehaviour
 
         if (Mathf.Abs(playerPosition.x - transform.position.x) < 0.05f && Mathf.Abs(playerPosition.z - transform.position.z) < 0.05f)
         {
-            Debug.Log("Won Level!");
             StartCoroutine(FadeToWin());
         }
     }
