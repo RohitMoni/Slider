@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
+using System.Runtime.Remoting.Messaging;
 using UnityEngine;
 using System.Collections;
 using Object = UnityEngine.Object;
@@ -10,6 +12,7 @@ public class PlayerBehaviour : MonoBehaviour
 {
     /* Public References */
     public GameObject WallBlock;
+    public Material IceMaterial;
 
     /* References */
     private WinBlockBehaviour _winBlock;
@@ -18,6 +21,7 @@ public class PlayerBehaviour : MonoBehaviour
     /* Properties */
     private List<int> _movementQueue; // 1 = Up, 2 = Down, 3 = Left, 4 = Right
     private bool _isMoving;
+    private List<Transform> _iceBlocks; 
 
     /* Constants */
     private const float SlideSpeed = 0.2f;
@@ -29,6 +33,13 @@ public class PlayerBehaviour : MonoBehaviour
 	    _isMoving = false;
 	    _winBlock = GameObject.Find("WinBlock").GetComponent<WinBlockBehaviour>();
 	    _wallsAnchor = GameObject.Find("Walls").transform;
+
+        _iceBlocks = new List<Transform>();
+	    foreach (Transform block in GameObject.Find("Floor").transform)
+	    {
+            if (block.GetComponent<Renderer>().material.name == "Ice (Instance)")
+                _iceBlocks.Add(block);
+	    }
 	}
 	
 	// Update is called once per frame
@@ -73,18 +84,42 @@ public class PlayerBehaviour : MonoBehaviour
 	                break;
 	        }
 
-	        var canMove = !Physics.Raycast(transform.position, movement, transform.localScale.x);
+	        var steps = 0;
+	        var finalPosition = GetFinalPositionAfterMovement(movement, ref steps);
 
-	        if (canMove)
+	        if (finalPosition != transform.position)
 	        {
                 GetComponent<AudioSource>().Play();
-	            StartCoroutine(Slide(transform.position, transform.position + movement, SlideSpeed));
+	            StartCoroutine(Slide(transform.position, finalPosition, SlideSpeed * Mathf.Max(1, steps/2)));
 	            _isMoving = true;
 	        }
 
 	        _movementQueue.RemoveAt(0);
 	    }
 	}
+
+    Vector3 GetFinalPositionAfterMovement(Vector3 movement, ref int steps)
+    {
+        var finalPosition = transform.position;
+
+        while (!Physics.Raycast(finalPosition, movement, transform.localScale.x))
+        {
+            finalPosition += movement;
+            steps++;
+
+            if (_iceBlocks.Count == 0)
+                break;
+
+            var lowerPosition = finalPosition;
+            lowerPosition.y -= 0.3f;
+            var standingOnIce = _iceBlocks.Any(block => block.transform.position == lowerPosition);
+
+            if (!standingOnIce)
+                break;
+        }
+
+        return finalPosition;
+    }
 
     float SmoothTimeValue(float time)
     {
