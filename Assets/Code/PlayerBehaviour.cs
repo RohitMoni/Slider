@@ -35,10 +35,14 @@ public class PlayerBehaviour : MonoBehaviour
 	    _wallsAnchor = GameObject.Find("Walls").transform;
 
         _iceBlocks = new List<Transform>();
-	    foreach (Transform block in GameObject.Find("Floor").transform)
+	    var iceAnchor = GameObject.Find("Floor");
+	    if (iceAnchor)
 	    {
-            if (block.GetComponent<Renderer>().material.name == "Ice (Instance)")
-                _iceBlocks.Add(block);
+	        foreach (Transform block in GameObject.Find("Floor").transform)
+	        {
+	            if (block.GetComponent<Renderer>().material.name == "Ice (Instance)")
+	                _iceBlocks.Add(block);
+	        }
 	    }
 	}
 	
@@ -84,13 +88,13 @@ public class PlayerBehaviour : MonoBehaviour
 	                break;
 	        }
 
-	        var steps = 0;
+	        var steps = 0f;
 	        var finalPosition = GetFinalPositionAfterMovement(movement, ref steps);
 
 	        if (finalPosition != transform.position)
 	        {
                 GetComponent<AudioSource>().Play();
-	            StartCoroutine(Slide(transform.position, finalPosition, SlideSpeed * Mathf.Max(1, steps/2)));
+	            StartCoroutine(Slide(transform.position, finalPosition, SlideSpeed * Mathf.Max(1, steps)));
 	            _isMoving = true;
 	        }
 
@@ -98,14 +102,14 @@ public class PlayerBehaviour : MonoBehaviour
 	    }
 	}
 
-    Vector3 GetFinalPositionAfterMovement(Vector3 movement, ref int steps)
+    Vector3 GetFinalPositionAfterMovement(Vector3 movement, ref float steps)
     {
         var finalPosition = transform.position;
 
         while (!Physics.Raycast(finalPosition, movement, transform.localScale.x))
         {
             finalPosition += movement;
-            steps++;
+            steps += 0.5f;
 
             if (_iceBlocks.Count == 0)
                 break;

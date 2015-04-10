@@ -103,7 +103,8 @@ public class WinBlockBehaviour : MonoBehaviour
 
         // Restart level here
         var currentLevelName = Application.loadedLevelName;
-        var levelNumber = int.Parse(currentLevelName.Substring(currentLevelName.Length - 1, 1));
+        var levelNumberString = currentLevelName.Substring(5);
+        var levelNumber = int.Parse(levelNumberString);
 
         if (Application.levelCount-2 > levelNumber)
             Application.LoadLevel("Level" + (levelNumber + 1));
