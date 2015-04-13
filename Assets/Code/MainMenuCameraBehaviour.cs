@@ -1,16 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class MainMenuCameraBehaviour : MonoBehaviour
 {
     private bool _doneFading= true;
     private float _mousePositionX = 0;
     private float _mouseMovementX =0;
-    private GameObject _fadeScreen;
+    private GameObject _fadePanel;
 
     void Start()
     {
-        _fadeScreen = GameObject.Find("FadeScreen");
+        _fadePanel = GameObject.Find("Fade Panel");
         StartCoroutine(FadeScreenOut(1f));
     }
 
@@ -26,6 +27,8 @@ public class MainMenuCameraBehaviour : MonoBehaviour
 
         if (Input.GetKeyUp(KeyCode.Escape))
             Application.Quit();
+	    if (Input.anyKeyDown)
+	        StartLevel(1);
 	}
 
     public void StartLevel(int number)
@@ -33,7 +36,6 @@ public class MainMenuCameraBehaviour : MonoBehaviour
         if (!_doneFading)
             return;
 
-        //Debug.Log("Go to next level");
         StartCoroutine(FadeToGoToLevel(number));
     }
 
@@ -58,8 +60,7 @@ public class MainMenuCameraBehaviour : MonoBehaviour
         while (deltaTime < time)
         {
             deltaTime += Time.deltaTime;
-            if (_fadeScreen)
-                _fadeScreen.GetComponent<Renderer>().material.color = Color.Lerp(new Color(1, 1, 1, 0), Color.white, (deltaTime / time));
+            _fadePanel.GetComponent<Image>().color = Color.Lerp(new Color(1, 1, 1, 0), Color.white, (deltaTime / time));
             yield return null;
         }
 
@@ -74,8 +75,7 @@ public class MainMenuCameraBehaviour : MonoBehaviour
         while (deltaTime < time)
         {
             deltaTime += Time.deltaTime;
-            if (_fadeScreen)
-                _fadeScreen.GetComponent<Renderer>().material.color = Color.Lerp(Color.white, new Color(1, 1, 1, 0), (deltaTime / time));
+            _fadePanel.GetComponent<Image>().color = Color.Lerp(Color.white, new Color(1, 1, 1, 0), (deltaTime / time));
             yield return null;
         }
 
